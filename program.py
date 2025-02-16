@@ -6,12 +6,21 @@ class TextEditorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Текстовий редактор")
-        self.root.geometry("600x400")
+        self.root.geometry("800x600")
+        self.root.configure(bg="#f0f0f0")
 
         self.create_widgets()
 
     def create_widgets(self):
-        self.text_area = tk.Text(self.root, wrap="word", font=("Arial", 12))
+        self.text_area = tk.Text(
+            self.root,
+            wrap="word",
+            font=("Arial", 14),
+            bg="#ffffff",
+            fg="#000000",
+            padx=10,
+            pady=10,
+        )
         self.text_area.pack(expand=True, fill="both")
 
         self.menu = tk.Menu(self.root)
@@ -20,9 +29,15 @@ class TextEditorApp:
         file_menu = tk.Menu(self.menu, tearoff=False)
         file_menu.add_command(label="Відкрити", command=self.open_file)
         file_menu.add_command(label="Зберегти", command=self.save_file)
+        file_menu.add_separator()
         file_menu.add_command(label="Вийти", command=self.root.quit)
 
         self.menu.add_cascade(label="Файл", menu=file_menu)
+
+        edit_menu = tk.Menu(self.menu, tearoff=False)
+        edit_menu.add_command(label="Очистити", command=self.clear_text)
+
+        self.menu.add_cascade(label="Редагування", menu=edit_menu)
 
     def open_file(self):
         file_path = filedialog.askopenfilename()
@@ -40,6 +55,9 @@ class TextEditorApp:
         if file_path:
             with open(file_path, "w", encoding="utf-8") as file:
                 file.write(self.text_area.get(1.0, tk.END))
+
+    def clear_text(self):
+        self.text_area.delete(1.0, tk.END)
 
 
 if __name__ == "__main__":
