@@ -2,6 +2,23 @@ import tkinter as tk
 from tkinter import filedialog
 
 
+class TextEditorModel:
+    def __init__(self):
+        self.content = ""
+
+    def load_content(self, file_path):
+        with open(file_path, "r", encoding="utf-8") as file:
+            self.content = file.read()
+        return self.content
+
+    def save_content(self, file_path, content):
+        with open(file_path, "w", encoding="utf-8") as file:
+            file.write(content)
+
+    def clear_content(self):
+        self.content = ""
+
+
 class TextEditorApp:
     def __init__(self, root):
         self.root = root
@@ -9,6 +26,7 @@ class TextEditorApp:
         self.root.geometry("800x600")
         self.root.configure(bg="#f0f0f0")
 
+        self.model = TextEditorModel()
         self.create_widgets()
 
     def create_widgets(self):
@@ -42,10 +60,9 @@ class TextEditorApp:
     def open_file(self):
         file_path = filedialog.askopenfilename()
         if file_path:
-            with open(file_path, "r", encoding="utf-8") as file:
-                content = file.read()
-                self.text_area.delete(1.0, tk.END)
-                self.text_area.insert(tk.END, content)
+            content = self.model.load_content(file_path)
+            self.text_area.delete(1.0, tk.END)
+            self.text_area.insert(tk.END, content)
 
     def save_file(self):
         file_path = filedialog.asksaveasfilename(
@@ -53,10 +70,10 @@ class TextEditorApp:
             filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
         )
         if file_path:
-            with open(file_path, "w", encoding="utf-8") as file:
-                file.write(self.text_area.get(1.0, tk.END))
+            self.model.save_content(file_path, self.text_area.get(1.0, tk.END))
 
     def clear_text(self):
+        self.model.clear_content()
         self.text_area.delete(1.0, tk.END)
 
 
