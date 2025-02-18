@@ -1,1 +1,1 @@
-Added installation package for the "Text Editor" application project
+Added installation package for the "Text Editor" application project.
